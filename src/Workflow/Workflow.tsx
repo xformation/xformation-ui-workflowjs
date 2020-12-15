@@ -10,12 +10,21 @@ export class Workflow extends Component<any, any> {
             data: this.props.formData,
             currentTab: 0,
             activeIndex: 0,
-            formAllData: [],
             waitForResponse: this.props.waitForResponse,
             loading: false
         }
         this.formRef = React.createRef();
     };
+
+    componentDidUpdate(prevProps: any, prevState: any) {
+        if (JSON.stringify(prevProps.formData) !== JSON.stringify(this.props.formData)) {
+            this.setState({
+                data: this.props.formData,
+                currentTab: 0,
+                activeIndex: 0,
+            });
+        }
+    }
 
     navigateTab(index: any) {
         const { data } = this.state;
