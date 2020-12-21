@@ -10,7 +10,6 @@ export class Workflow extends Component {
             data: this.props.formData,
             currentTab: 0,
             activeIndex: 0,
-            waitForResponse: this.props.waitForResponse,
             loading: false
         }
         this.formRef = React.createRef();
@@ -37,26 +36,55 @@ export class Workflow extends Component {
     }
 
     onClickNext = () => {
-        const { activeIndex, waitForResponse } = this.state;
+        const { activeIndex } = this.state;
         let data = this.formRef.current.getDataFromForm();
         if (data.isValid) {
-            this.props.onClickNext(activeIndex, data);
-            if (!waitForResponse) {
-                this.navigateTab(activeIndex + 1);
-            } else {
-                this.setState({
-                    loading: true
-                });
-            }
+            delete data.isValid;
+            this.callApi(data);
         }
     };
 
-    showNextTab = () => {
-        const { activeIndex } = this.state;
-        this.navigateTab(activeIndex + 1);
-        this.setState({
-            loading: false
-        });
+    callApi = (jsonData) => {
+        const { activeIndex, data } = this.state;
+        if (data[activeIndex] && data[activeIndex].apiEndPoint) {
+            let requestOptions = {
+                method: "POST",
+                body: JSON.stringify(jsonData)
+            };
+            if (this.props.getApiHeaders) {
+                let headers = this.props.getApiHeaders();
+                requestOptions = {
+                    ...requestOptions,
+                    headers
+                };
+            }
+            this.setState({
+                loading: true
+            });
+            let apiCall = fetch(data[activeIndex].apiEndPoint, requestOptions).then(response => response.json());
+            apiCall.then(
+                response => {
+                    this.navigateTab(activeIndex + 1);
+                    this.setState({
+                        loading: false
+                    });
+                    if(this.props.onFormSubmitted){
+                        this.props.onFormSubmitted(activeIndex, response);
+                    }
+                },
+                error => {
+                    this.navigateTab(activeIndex + 1);
+                    this.setState({
+                        loading: false
+                    });
+                    if(this.props.onFormSubmitted){
+                        this.props.onFormSubmitted(activeIndex, error);
+                    }
+                }
+            );
+        } else {
+            this.navigateTab(activeIndex + 1);
+        }
     };
 
     displayTabs = () => {
