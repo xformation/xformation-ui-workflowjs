@@ -8,7 +8,6 @@ export class Workflow extends Component<any, any> {
         super(props);
         this.state = {
             data: this.props.formData,
-            currentTab: 0,
             activeIndex: 0,
             loading: false
         }
@@ -19,7 +18,6 @@ export class Workflow extends Component<any, any> {
         if (JSON.stringify(prevProps.formData) !== JSON.stringify(this.props.formData)) {
             this.setState({
                 data: this.props.formData,
-                currentTab: 0,
                 activeIndex: 0,
             });
         }
@@ -68,7 +66,7 @@ export class Workflow extends Component<any, any> {
                     this.setState({
                         loading: false
                     });
-                    if(this.props.onFormSubmitted){
+                    if (this.props.onFormSubmitted) {
                         this.props.onFormSubmitted(activeIndex, response);
                     }
                 },
@@ -77,7 +75,7 @@ export class Workflow extends Component<any, any> {
                     this.setState({
                         loading: false
                     });
-                    if(this.props.onFormSubmitted){
+                    if (this.props.onFormSubmitted) {
                         this.props.onFormSubmitted(activeIndex, error);
                     }
                 }
@@ -99,13 +97,20 @@ export class Workflow extends Component<any, any> {
         return retData;
     }
 
+    onChangeComponent = (e: any, componentIndex: any, type: any) => {
+        const { activeIndex } = this.state;
+        if(this.props.onChangeComponent){
+            this.props.onChangeComponent(e, type, activeIndex, componentIndex);
+        }
+    };
+
     displaytabContent = () => {
         const { data, activeIndex } = this.state;
         let tabData = [];
         for (let i = 0; i < data.length; i++) {
             if (data[i].content !== undefined && i === activeIndex) {
                 tabData.push(
-                    <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRef} />
+                    <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRef} onChangeComponent={this.onChangeComponent} />
                 );
             } else {
                 tabData.push(

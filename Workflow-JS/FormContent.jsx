@@ -3,15 +3,17 @@ import { CustomTextbox } from './components/CustomTextbox';
 import { CustomSelectbox } from './components/CustomSelectbox';
 import { CustomTextArea } from './components/CustomTextArea';
 import { CustomRadioCheckbox } from './components/CustomRadioCheckbox';
+import { CustomFile } from './components/CustomFile';
 
 export const componentType = {
     TEXT: "text",
     RADIO: "radio",
     CHECK_BOX: "checkbox",
     NUMBER: "number",
-    DATE: "DATE",
+    DATE: "date",
     TEXT_AREA: "textarea",
-    SELECTBOX: "select"
+    SELECTBOX: "select",
+    FILE: "file",
 };
 
 class FormContent extends Component {
@@ -61,6 +63,7 @@ class FormContent extends Component {
         } else {
             formData[index].value = value;
         }
+        this.props.onChangeComponent(e, index, type);
         this.setState({
             formData
         });
@@ -171,6 +174,10 @@ class FormContent extends Component {
         } else if (formData.type === componentType.RADIO || formData.type === componentType.CHECK_BOX) {
             frmData.push(
                 <CustomRadioCheckbox key={formData.id} containerClass="form-group" inputClass="form-control d-inline-block w-auto p-0" type={formData.type} htmlFor={formData.id} id={formData.id} name={formData.name} value={formData.value} options={formData.options} onChange={(e) => this.handleStateChange(e, index, formData.type)} isValid={error.isValid} message={error.message} label={formData.title} notice={formData.notice} />
+            );
+        } else if (formData.type === componentType.FILE) {
+            frmData.push(
+                <CustomFile key={formData.id} containerClass="form-group" type={formData.type} inputClass="form-control" htmlFor={formData.name} id={formData.name} name={formData.name} value={formData.value} onChange={(e) => this.handleStateChange(e, index, formData.type)} isValid={error.isValid} message={error.message} notice={formData.notice} label={formData.title} />
             );
         }
         return frmData;
