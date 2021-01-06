@@ -10,6 +10,7 @@ class App extends React.Component<any, any> {
           title: 'Event Details',
           tabTitle: 'Event Details',
           subHeading: 'This is sub heading',
+          apiEndPoint: 'https://google.com',
           content: [
             {
               title: 'Gender',
@@ -45,14 +46,14 @@ class App extends React.Component<any, any> {
               title: 'Email',
               name: "email",
               type: componentType.TEXT,
-              isRequired: false,
+              isRequired: true,
               value: "",
               placeHolder: 'Your Email',
               notice: 'We don\'t share email',
               errorMessage: "Please enter your email",
               id: "email",
-              validation: [{
-                regEx: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              validations: [{
+                regEx: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/',
                 message: "Please enter valid email"
               }]
             },
@@ -102,8 +103,17 @@ class App extends React.Component<any, any> {
                 { value: "1", label: 'High' },
                 { value: "3", label: 'Normal' }
               ]
-
             },
+            {
+              title: 'File',
+              name: "files",
+              type: componentType.FILE,
+              value: "",
+              isRequired: false,
+              id: "file",
+              notice: 'Choose your upload file.',
+              errorMessage: "",
+            }
           ]
         },
         {
@@ -150,8 +160,8 @@ class App extends React.Component<any, any> {
               value: "",
               placeHolder: 'Your Email',
               notice: 'We don\'t share email',
-              validation: [{
-                regEx: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              validations: [{
+                regEx: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
                 message: "Please enter valid email"
               }],
               id: "email1"
@@ -209,17 +219,24 @@ class App extends React.Component<any, any> {
   }
 
   onClickNext = (index: any, tabData: any) => {
-    console.log(tabData);
     setTimeout(() => {
       this.workflowRef.current.showNextTab();
     }, 3000);
   };
 
+  onFormSubmitted = (step: any, response: any) => {
+    console.log(step, response);
+  };
+
+  onChangeComponent = (e: any, type: any, tabIndex: any, componentIndex: any) => {
+    console.log(e, type, tabIndex, componentIndex);
+  }
+
   render() {
     const { data } = this.state;
     return (
       <div>
-        <Workflow formData={data} onClickNext={this.onClickNext} ref={this.workflowRef} waitForResponse={true} />
+        <Workflow formData={data} onFormSubmitted={this.onFormSubmitted} ref={this.workflowRef} onChangeComponent={this.onChangeComponent} />
       </div>
     );
   }

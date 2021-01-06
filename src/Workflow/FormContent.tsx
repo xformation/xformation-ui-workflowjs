@@ -92,13 +92,13 @@ class FormContent extends Component<any, any> {
                         };
                         isValid = false;
                     } else {
-                        if (formItem.validation && formItem.validation.length > 0) {
-                            for (let j = 0; j < formItem.validation.length; j++) {
-                                let isItemValid = this.validateValue(formItem.value, formItem.validation[j].regEx);
+                        if (formItem.validations && formItem.validations.length > 0) {
+                            for (let j = 0; j < formItem.validations.length; j++) {
+                                let isItemValid = this.validateValue(formItem.value, formItem.validations[j].regEx);
                                 if (!isItemValid) {
                                     retData[i] = {
                                         isValid: isItemValid,
-                                        message: formItem.validation[j].message
+                                        message: formItem.validations[j].message
                                     };
                                     isValid = false;
                                     break;
@@ -107,13 +107,13 @@ class FormContent extends Component<any, any> {
                         }
                     }
                 } else {
-                    if (formItem.value && formItem.validation && formItem.validation.length > 0) {
-                        for (let j = 0; j < formItem.validation.length; j++) {
-                            let isItemValid = this.validateValue(formItem.value, formItem.validation[j].regEx);
+                    if (formItem.value && formItem.validations && formItem.validations.length > 0) {
+                        for (let j = 0; j < formItem.validations.length; j++) {
+                            let isItemValid = this.validateValue(formItem.value, formItem.validations[j].regEx);
                             if (!isItemValid) {
                                 retData[i] = {
                                     isValid: isItemValid,
-                                    message: formItem.validation[j].message
+                                    message: formItem.validations[j].message
                                 };
                                 isValid = false;
                                 break;
@@ -130,7 +130,8 @@ class FormContent extends Component<any, any> {
     };
 
     validateValue = (value: any, regEx: any) => {
-        return regEx.test(value);
+        let regO = new RegExp(regEx);
+        return regO.test(value);
     }
 
     displayFormData = () => {
