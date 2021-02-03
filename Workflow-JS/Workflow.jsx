@@ -125,11 +125,11 @@ export class Workflow extends Component {
         const { data, activeIndex, loading } = this.state;
         return (
             <div className="container">
-                <div className="d-block tabs-container">
+                <div className="d-block workflow-tabs-container">
                     <ul>
                         {this.displayTabs()}
                     </ul>
-                    <div className="tab-content">
+                    <div className="workflow-tab-content">
                         {this.displaytabContent()}
                         <div className="d-block pre-next-buttons">
                             <button className={`blue-button ${activeIndex === 0 ? 'disable' : ''}`} onClick={(e) => this.navigateTab(activeIndex - 1)}>Previous</button>
