@@ -3,7 +3,7 @@ import FormContent from './FormContent';
 import './css/workflow.css';
 
 export class Workflow extends Component {
-    formRef = null;
+    formRefs = [];
     constructor(props) {
         super(props);
         this.state = {
@@ -11,7 +11,15 @@ export class Workflow extends Component {
             activeIndex: 0,
             loading: false
         }
-        this.formRef = React.createRef();
+        this.createRefs(this.props.formData);
+    };
+
+    createRefs = (data) => {
+        if (data && data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+                this.formRefs.push(React.createRef());
+            }
+        }
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -21,6 +29,7 @@ export class Workflow extends Component {
                 activeIndex: 0,
             });
         }
+        this.createRefs(this.props.formData);
     }
 
     navigateTab(index) {
@@ -35,14 +44,35 @@ export class Workflow extends Component {
 
     onClickNext = () => {
         const { activeIndex } = this.state;
-        let data = this.formRef.current.getDataFromForm();
+        let data = this.formRefs[activeIndex].current.getDataFromForm(true);
         if (data.isValid) {
             delete data.isValid;
-            this.callApi(data);
+            let wholeData = [];
+            for (let i = 0; i < this.formRefs.length; i++) {
+                let newData = this.formRefs[i].current.getDataFromForm(false);
+                wholeData = wholeData.concat(newData.formData);
+            }
+            // this.reFormateData(wholeData);
+            this.callApi(wholeData);
         }
     };
 
+    reFormateData = (data) => {
+        let jsonData = {};
+        Object.keys(data).forEach((index) => {
+            let row = data[index];
+            // if (row.value) {
+            jsonData = {
+                ...jsonData,
+                [row['name']]: row.value
+            };
+            // }
+        });
+        return jsonData;
+    }
+
     callApi = (jsonData) => {
+        jsonData = this.reFormateData(jsonData);
         const { activeIndex, data } = this.state;
         if (data[activeIndex] && data[activeIndex].apiEndPoint) {
             let requestOptions = {
@@ -80,9 +110,27 @@ export class Workflow extends Component {
                     }
                 }
             );
+        } else if (this.props.onChangeTab) {
+            this.setState({
+                loading: true,
+            });
+            this.props.onChangeTab(activeIndex, jsonData);
         } else {
             this.navigateTab(activeIndex + 1);
         }
+    };
+
+    showNextTab = () => {
+        this.setState({
+            loading: false,
+        });
+        this.navigateTab(this.state.activeIndex + 1);
+    };
+
+    onSuccessfulCall = () => {
+        this.setState({
+            loading: false
+        });
     };
 
     displayTabs = () => {
@@ -108,9 +156,11 @@ export class Workflow extends Component {
         const { data, activeIndex } = this.state;
         let tabData = [];
         for (let i = 0; i < data.length; i++) {
-            if (data[i].content !== undefined && i === activeIndex) {
+            if (data[i].content !== undefined) {
                 tabData.push(
-                    <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRef} onChangeComponent={this.onChangeComponent} />
+                    <div style={{ display: activeIndex === i ? 'block' : 'none' }}>
+                        <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRefs[i]} onChangeComponent={this.onChangeComponent} />
+                    </div>
                 );
             } else {
                 tabData.push(
@@ -139,10 +189,8 @@ export class Workflow extends Component {
                             {activeIndex === data.length - 1 &&
                                 <button className={`blue-button float-right m-r-0 ${(loading) ? 'disable' : ''}`} onClick={this.onClickNext} disabled={loading}>Finish</button>
                             }
-
                         </div>
                     </div>
-
                 </div>
             </div>
         );
