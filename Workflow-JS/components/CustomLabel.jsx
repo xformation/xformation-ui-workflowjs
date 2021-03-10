@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-export class CustomTextArea extends Component {
+export class CustomLabel extends Component {
     constructor(props) {
         super(props);
     }
@@ -9,11 +9,10 @@ export class CustomTextArea extends Component {
         }
     };
     render() {
-        const { containerClass, labelClass, inputClass, isRequired, label, htmlFor, id, name, placeholder, value, isValid, message, notice } = this.props;
+        const { containerClass, labelClass, inputClass, label, htmlFor, value, isValid, message, type, notice } = this.props;
         return (
             <div className={containerClass}>
-                <label className={labelClass} htmlFor={htmlFor}>{label}{isRequired == true && <span className="required"> * </span>}</label>
-                <textarea className={`${inputClass} ${isValid ? '' : 'is-invalid error'}`} id={id} name={name} value={value} placeholder={placeholder} onChange={this.onChange} />
+                <label className={labelClass} htmlFor={htmlFor}>{label}: {value}</label>
                 {
                     !isValid &&
                     <div className="invalid-feedback">

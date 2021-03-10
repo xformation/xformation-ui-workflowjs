@@ -10,6 +10,7 @@ export class CustomTextbox extends Component {
     };
     render() {
         const { containerClass, labelClass, inputClass, label, htmlFor, isRequired, id, name, placeHolder, value, isValid, message, type, notice } = this.props;
+        // console.log()
         return (
             <div className={containerClass}>
                 <label className={labelClass} htmlFor={htmlFor}>{label}{isRequired == true && <span className="required"> * </span>}</label>

@@ -616,7 +616,6 @@ body{
   line-height: 15px;
   color: rgb(159, 159, 159);
 }
-
 .workflow-tab-content .form-group span.required {
   font-weight: 600;
   font-size: 15px;
@@ -681,7 +680,6 @@ body{
   background-color: #495057;
   color: #ffffff;
 }
-
 
 @media (max-width: 576px) {
   .workflow-tabs-container ul li{

@@ -20,7 +20,7 @@ export class CustomSelectbox extends Component {
         return retData;
     }
     render() {
-        const { containerClass, labelClass, inputClass, label, htmlFor, isRequired, id, name, value, isValid, message, options, notice } = this.props;
+        const { containerClass, labelClass, inputClass, isRequired, label, htmlFor, id, name, value, isValid, message, options, notice } = this.props;
         return (
             <div className={containerClass}>
                 <label className={labelClass} htmlFor={htmlFor}>{label}{isRequired == true && <span className="required"> * </span>}</label>

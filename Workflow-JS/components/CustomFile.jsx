@@ -9,7 +9,7 @@ export class CustomFile extends Component {
         }
     };
     render() {
-        const { containerClass, labelClass, inputClass, label, htmlFor, isRequired, id, name, value, isValid, message, type, notice } = this.props;
+        const { containerClass, labelClass, inputClass, label, isRequired, htmlFor, id, name, value, isValid, message, type, notice } = this.props;
         return (
             <div className={containerClass}>
                 <label className={labelClass} htmlFor={htmlFor}>{label}{isRequired == true && <span className="required"> * </span>}</label>

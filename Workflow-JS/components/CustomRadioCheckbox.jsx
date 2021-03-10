@@ -24,7 +24,7 @@ export class CustomRadioCheckbox extends Component {
         return retData;
     }
     render() {
-        const { containerClass, labelClass, label, isValid, isRequired, message, options, notice } = this.props;
+        const { containerClass, labelClass, label, isValid, message, options, notice, isRequired } = this.props;
         return (
             <div className={containerClass}>
                 <label className={labelClass}>{label}{isRequired == true && <span className="required"> * </span>}</label>

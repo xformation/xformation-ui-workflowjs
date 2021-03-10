@@ -9,7 +9,7 @@ export class Workflow extends Component {
         this.state = {
             data: this.props.formData,
             activeIndex: 0,
-            loading: false
+            loading: false,
         }
         this.createRefs(this.props.formData);
     };
@@ -28,8 +28,8 @@ export class Workflow extends Component {
                 data: this.props.formData,
                 activeIndex: 0,
             });
+            this.createRefs(this.props.formData);
         }
-        this.createRefs(this.props.formData);
     }
 
     navigateTab(index) {
@@ -156,7 +156,13 @@ export class Workflow extends Component {
         const { data, activeIndex } = this.state;
         let tabData = [];
         for (let i = 0; i < data.length; i++) {
-            if (data[i].content !== undefined) {
+            if (data[i].content) {
+                tabData.push(
+                    <div style={{ display: activeIndex === i ? 'block' : 'none' }}>
+                        <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRefs[i]} onChangeComponent={this.onChangeComponent} />
+                    </div>
+                );
+            } else if (data[i].htmlContent) {
                 tabData.push(
                     <div style={{ display: activeIndex === i ? 'block' : 'none' }}>
                         <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRefs[i]} onChangeComponent={this.onChangeComponent} />
@@ -189,8 +195,10 @@ export class Workflow extends Component {
                             {activeIndex === data.length - 1 &&
                                 <button className={`blue-button float-right m-r-0 ${(loading) ? 'disable' : ''}`} onClick={this.onClickNext} disabled={loading}>Finish</button>
                             }
+
                         </div>
                     </div>
+
                 </div>
             </div>
         );
