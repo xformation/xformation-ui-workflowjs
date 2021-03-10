@@ -156,7 +156,13 @@ export class Workflow extends Component<any, any> {
         const { data, activeIndex } = this.state;
         let tabData = [];
         for (let i = 0; i < data.length; i++) {
-            if (data[i].content !== undefined) {
+            if (data[i].content) {
+                tabData.push(
+                    <div style={{ display: activeIndex === i ? 'block' : 'none' }}>
+                        <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRefs[i]} onChangeComponent={this.onChangeComponent} />
+                    </div>
+                );
+            } else if (data[i].htmlContent) {
                 tabData.push(
                     <div style={{ display: activeIndex === i ? 'block' : 'none' }}>
                         <FormContent key={`formcontent-${i}`} content={data[i]} ref={this.formRefs[i]} onChangeComponent={this.onChangeComponent} />

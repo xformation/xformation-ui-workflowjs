@@ -4,6 +4,7 @@ import { CustomSelectbox } from './components/CustomSelectbox';
 import { CustomTextArea } from './components/CustomTextArea';
 import { CustomRadioCheckbox } from './components/CustomRadioCheckbox';
 import { CustomFile } from './components/CustomFile';
+import { CustomLabel } from './components/CustomLabel';
 
 export const componentType = {
     TEXT: "text",
@@ -14,6 +15,7 @@ export const componentType = {
     TEXT_AREA: "textarea",
     SELECTBOX: "select",
     FILE: "file",
+    LABEL: "label"
 };
 
 class FormContent extends Component<any, any> {
@@ -24,6 +26,7 @@ class FormContent extends Component<any, any> {
             title: content.title,
             subHeading: content.subHeading,
             formData: content.content,
+            htmlContent: content.htmlContent,
             isSubmitted: this.props.isSubmittedStatus,
         }
     };
@@ -135,13 +138,23 @@ class FormContent extends Component<any, any> {
     }
 
     displayFormData = () => {
-        const { isSubmitted, formData } = this.state;
-        const { errorData, isValid } = this.validate(isSubmitted);
+        const { isSubmitted, formData, htmlContent } = this.state;
         let retData = [];
-        for (let j = 0; j < formData.length; j++) {
-            let data = formData[j];
+        if (formData) {
+            const { errorData, isValid } = this.validate(isSubmitted);
+            if (formData) {
+                for (let j = 0; j < formData.length; j++) {
+                    let data = formData[j];
+                    retData.push(
+                        this.displayformField(data, errorData[j], j)
+                    );
+                }
+            }
+        } else if (htmlContent) {
             retData.push(
-                this.displayformField(data, errorData[j], j)
+                <div>
+                    {htmlContent}
+                </div>
             );
         }
         return retData;
@@ -184,6 +197,11 @@ class FormContent extends Component<any, any> {
         } else if (formData.type === componentType.FILE) {
             frmData.push(
                 <CustomFile key={formData.id} containerClass="form-group" type={formData.type} inputClass="form-control" htmlFor={formData.name} id={formData.name} name={formData.name} value={formData.value} onChange={(e: any) => this.handleStateChange(e, index, formData.type)} isValid={error.isValid} message={error.message} notice={formData.notice} label={formData.title} isRequired={formData.isRequired} />
+            );
+        }
+        else if (formData.type === componentType.LABEL) {
+            frmData.push(
+                <CustomLabel key={formData.id} containerClass="form-group" type={formData.type} inputClass="form-control" htmlFor={formData.name} id={formData.name} name={formData.name} value={formData.value} onChange={(e: any) => this.handleStateChange(e, index, formData.type)} isValid={error.isValid} message={error.message} notice={formData.notice} label={formData.title} isRequired={formData.isRequired} />
             );
         }
         return frmData;
